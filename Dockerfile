@@ -1,22 +1,47 @@
-FROM realyze/google-chrome-30.0.1599.101
+FROM ubuntu:16.04
 
-MAINTAINER Keyvan Fatehi <keyvanfatehi@gmail.com>
- 
-RUN apt-get update
-RUN apt-get install -y unzip xvfb
- 
-# Install Chromedriver 2.8
-ADD chromedriver_linux64.zip /srv/
-RUN unzip /srv/chromedriver_linux64.zip -d /usr/local/bin && rm /srv/chromedriver_linux64.zip
+#
+# BASE PACKAGES
+#
+RUN apt-get -qqy update \
+    && apt-get -qqy --no-install-recommends install \
+    bzip2 \
+    ca-certificates \
+    unzip \
+    wget \
+    curl \
+    git \
+    jq \
+    zip \
+    xvfb \
+    pulseaudio \
+    dbus \
+    dbus-x11 \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-ENV DISPLAY :99
+#
+# NODEJS
+#
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get update -qqy && apt-get -qqy install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-# Install Xvfb init script
-ADD xvfb_init /etc/init.d/xvfb
-RUN chmod a+x /etc/init.d/xvfb
-ADD xvfb-daemon-run /usr/bin/xvfb-daemon-run
-RUN chmod a+x /usr/bin/xvfb-daemon-run
+#
+# CHROME
+#
+ARG CHROME_VERSION="google-chrome-stable"
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update -qqy && apt-get -qqy install ${CHROME_VERSION:-google-chrome-stable} && \
+    rm /etc/apt/sources.list.d/google-chrome.list && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
+    ln -s /usr/bin/google-chrome /usr/bin/chromium-browser
 
-# Allow root to execute Google Chrome by replacing launch script
-ADD google-chrome-launcher /usr/bin/google-chrome
-RUN chmod a+x /usr/bin/google-chrome
+#
+# YARN
+#
+RUN wget -q -O - https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
+    apt-get update -qqy && apt-get -qqy install yarn && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/*
