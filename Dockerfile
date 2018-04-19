@@ -4,17 +4,6 @@ FROM ubuntu:16.04
 # BASE PACKAGES
 #
 
-ARG DOCKER_GID=993
-
-RUN groupadd -g ${DOCKER_GID} docker \
-  && curl -sSL https://get.docker.com/ | sh \
-  && apt-get -q autoremove \
-  && apt-get -q clean -y \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*.bin 
-
-RUN useradd -m -d /home/jenkins -s /bin/sh jenkins \
-  && usermod -aG docker jenkins
-
 RUN apt-get -qqy update \
     && apt-get -qqy --no-install-recommends install \
     bzip2 \
