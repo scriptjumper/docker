@@ -2,7 +2,7 @@ FROM realyze/google-chrome-30.0.1599.101
 
 MAINTAINER Keyvan Fatehi <keyvanfatehi@gmail.com>
  
-RUN apt-get update -y
+RUN apt-get update
 RUN apt-get install -y unzip xvfb
  
 # Install Chromedriver 2.8
