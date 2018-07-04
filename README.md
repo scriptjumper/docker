@@ -1,5 +1,7 @@
 # Welcome to the docker wiki!
 
+[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=shaeenk&repoName=docker&branch=master&pipelineName=docker&accountName=shaeenk&type=cf-1)]( https://g.codefresh.io/repositories/shaeenk/docker/builds?filter=trigger:build;branch:master;service:5b3d07769fe801465af799c2~docker)
+
 _Any changes made and pushed up to this repository will automatically trigger a build on my docker hub and within a couple of minutes later the build would of completed_.
 
 ## Requirements
